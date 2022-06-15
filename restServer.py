@@ -1,6 +1,6 @@
 from flask import Flask, json, request, abort, jsonify
-from configInterface import *
-from getDetails import *
+from configInterface import create_interface, del_interface
+from getDetails import interface_details
 
 app = Flask(__name__)
 
