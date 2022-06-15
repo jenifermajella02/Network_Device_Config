@@ -1,7 +1,6 @@
 from ncclient import manager
 
-global dry_run
-dry_run = False
+import constants
 
 
 ################################################################################
@@ -33,9 +32,9 @@ def create_interface(name, ipvalue):
    '''
     rpc_msg = creation_rpc % (name, ipvalue)
     print(rpc_msg)
-    if not dry_run:
+    if not constants.dry_run:
         try:
-            with manager.connect(host="ios-xe-mgmt.cisco.com", port=830, username='developer', password='C1sco12345',
+            with manager.connect(host= constants.host , port=constants.port, username=constants.username, password=constants.password,
                                  hostkey_verify=False) as m:
                 reply = m.edit_config(rpc_msg, target='running')
                 print(reply)
@@ -72,9 +71,9 @@ def del_interface(name):
 
     rpc_msg = deletion_rpc % name
     print(rpc_msg)
-    if not dry_run:
+    if not constants.dry_run:
         try:
-            with manager.connect(host="ios-xe-mgmt.cisco.com", port=830, username='developer', password='C1sco12345',
+            with manager.connect(host=constants.host, port=constants.port, username=constants.username, password=constants.password,
                                  hostkey_verify=False) as m:
                 reply = m.edit_config(rpc_msg, target='running')
                 print(reply)
