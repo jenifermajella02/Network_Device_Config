@@ -24,7 +24,6 @@ def config_loopback():
         'ip': request.json['ip'],
     }
     Params.append(param)
-    b = jsonify({'ip': param['ip']})
     content = request.get_json()
     ip = (content['ip'])
     name = (content['name'])
