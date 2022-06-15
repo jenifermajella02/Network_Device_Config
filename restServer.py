@@ -1,77 +1,81 @@
 from flask import Flask, json, request, abort, jsonify
-import logging
-#import logframework
+from configInterface import *
+from getDetails import *
 
 app = Flask(__name__)
 
 Params = [
 ]
 
+
 ################################################################################
 # Name: config_loopback()
-# Description: This function is used for configuring the loopback IP on the 
-#              network device 
+# Description: This function is used for configuring the loopback IP on the
+#              network device
 # Input Parameter: loopback ip
 # Output Parameter: Returns params in json format
 ################################################################################
 @app.route('/configloopback', methods=['POST'])
 def config_loopback():
     if not request.json:
-        logging.info('Error while creating config')
+        print('Error while creating config')
         abort(400)
     param = {
         'ip': request.json['ip'],
-        #'certificate': request.json.get('certificate', "")
     }
     Params.append(param)
-    b=jsonify({'ip': param['ip']})
+    b = jsonify({'ip': param['ip']})
     content = request.get_json()
-    ip_value = (content['ip'])
-    logging.info('IP VALUE: %s', ip_value)
-    if (ip_value == Params[0]['ip']):
-       print("success")
-       logging.info('Updated params')
-       logging.info('Params= %s', Params)
-       try:
-          logging.info('Posting ip Config to ipconfig function')
-          print("success")
-	  #loopback_config()  function call here
-       except:
-          abort(404)
-       else:
-          logging.info('Loopback IP Configuration Successful')
-          return jsonify({'param': param}), 201
+    ip = (content['ip'])
+    name = (content['name'])
+    if request.json['loopback'] == "create":
+        print('Input received to create loopback')
+        try:
+            print('Posting interface details to create_interface function')
+            create_interface(name, ip)
+        except:
+            abort(404)
+        else:
+            print('Loopback IP Created successfully')
+            return "Loopback IP created"
     else:
-       logging.error('Failed to update params')
-       abort(404)
+        print('Failed to update params')
+        abort(404)
+
 
 ################################################################################
 # Name: delete_loopback()
-# Description: This function is used for delete the loopback IP on the 
-#              network device 
+# Description: This function is used for delete the loopback IP on the
+#              network device
 # Input Parameter: none
 # Output Parameter: Returns status of the PNP configuration reset process
 ################################################################################
 @app.route('/deleteloopback', methods=['POST'])
 def delete_loopback():
     if not request.json:
-        logging.info('Error while deleting IP')
+        print('Error while deleting IP')
         abort(400)
-    if request.json['loopback'] == "delete" :
-       logging.info('Input received to delete loopback')
-       print("del success")
-       try:
-          logging.info('Posting delete input to ipdelete function')
-          print("del success")
-	  #loopback_del()  function call here
-       except:
-          abort(404)
-       else:
-          logging.info('Loopback IP deletion Successful')
-          return "Loopback IP deleted"
+    param = {
+        'loopbacknum': request.json['loopbacknum'],
+    }
+    Params.append(param)
+    b = jsonify({'loopbacknum': param['loopbacknum']})
+    content = request.get_json()
+    loopbacknum = (content['loopbacknum'])
+    if request.json['loopback'] == "delete":
+        print('Input received to delete loopback')
+        try:
+            print('Posting delete input to del_interface function')
+            del_interface(loopbacknum)
+        except:
+            abort(404)
+        else:
+            print('Loopback IP deletion Successful')
+            return "Loopback IP deleted"
     else:
-       logging.error('Failed to delete IP')
-       abort(404)
+        print('Failed to delete IP')
+        abort(404)
+
 
 ################################################################################
 # Name: get_details()
@@ -81,8 +85,9 @@ def delete_loopback():
 ################################################################################
 @app.route('/getinterfaces', methods=['GET'])
 def get_params():
-    #interface_details() function call here
-    return jsonify({'Interfaces': Params})
+    output = interface_details()
+    print(output)
+    return output
 
 
 if __name__ == '__main__':
