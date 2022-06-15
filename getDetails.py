@@ -21,10 +21,15 @@ def interface_details():
     # Show command that we execute.
     command = "show interfaces summary"
     if not dry_run:
-        with ConnectHandler(**cisco1) as net_connect:
-            output = net_connect.send_command(command)
-        # Automatically cleans-up the output so that only the show output is returned
-        print(output)
-        return output
+        try:
+            with ConnectHandler(**cisco1) as net_connect:
+                output = net_connect.send_command(command)
+            # Automatically cleans-up the output so that only the show output is returned
+            print(output)
+        except:
+            print("Something went wrong")
+        else:
+            print("Displayed successfully")
+            return output
     else:
         print('DRY_RUN enabled')
