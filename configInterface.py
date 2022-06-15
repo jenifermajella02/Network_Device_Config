@@ -34,10 +34,15 @@ def create_interface(name, ipvalue):
     rpc_msg = creation_rpc % (name, ipvalue)
     print(rpc_msg)
     if not dry_run:
-        with manager.connect(host="ios-xe-mgmt.cisco.com", port=830, username='developer', password='C1sco12345',
-                             hostkey_verify=False) as m:
-            reply = m.edit_config(rpc_msg, target='running')
-            print(reply)
+        try:
+            with manager.connect(host="ios-xe-mgmt.cisco.com", port=830, username='developer', password='C1sco12345',
+                                 hostkey_verify=False) as m:
+                reply = m.edit_config(rpc_msg, target='running')
+                print(reply)
+        except:
+            print("Something went wrong")
+        else:
+            print("Created successfully")
     else:
         print('DRY_RUN enabled')
         print(rpc_msg)
@@ -68,10 +73,15 @@ def del_interface(name):
     rpc_msg = deletion_rpc % name
     print(rpc_msg)
     if not dry_run:
-        with manager.connect(host="ios-xe-mgmt.cisco.com", port=830, username='developer', password='C1sco12345',
-                             hostkey_verify=False) as m:
-            reply = m.edit_config(rpc_msg, target='running')
-            print(reply)
+        try:
+            with manager.connect(host="ios-xe-mgmt.cisco.com", port=830, username='developer', password='C1sco12345',
+                                 hostkey_verify=False) as m:
+                reply = m.edit_config(rpc_msg, target='running')
+                print(reply)
+        except:
+            print("Something went wrong")
+        else:
+            print("Created successfully")
     else:
         print('DRY_RUN enabled')
         print(rpc_msg)
