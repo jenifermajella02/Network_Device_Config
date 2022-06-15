@@ -1,7 +1,6 @@
 from netmiko import ConnectHandler
 
-global dry_run
-dry_run = False
+import constants
 
 
 ################################################################################
@@ -13,19 +12,17 @@ dry_run = False
 ################################################################################
 def interface_details():
     cisco1 = {
-        "device_type": "cisco_ios",
-        "host": "ios-xe-mgmt.cisco.com",
-        "username": "developer",
-        "password": "C1sco12345",
+        "device_type": constants.device_type,
+        "host": constants.host,
+        "username": constants.username,
+        "password": constants.password,
     }
     # Show command that we execute.
     command = "show interfaces summary"
-    if not dry_run:
+    if not constants.dry_run:
         try:
             with ConnectHandler(**cisco1) as net_connect:
                 output = net_connect.send_command(command)
-            # Automatically cleans-up the output so that only the show output is returned
-            print(output)
         except:
             print("Something went wrong")
         else:
